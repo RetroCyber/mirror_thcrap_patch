@@ -1,4 +1,4 @@
-name: Mirror "lang_zh-hans" Repo to Coding
+name: Mirror(lang_zh-hans)Repo to Coding
 
 on:
   schedule:
