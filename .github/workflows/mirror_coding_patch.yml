@@ -19,9 +19,9 @@ jobs:
       #   repository: RetroCyber/thpatch_chs_mirror
       #   token: ${{ secrets.SYNCHONIZE_TOKEN }}
       #   path: clones/RetroCyber/thpatch_chs_mirror
-      env:
-        CODING_TOKEN: ${{ secrets.CODING_TOKEN }}
-        CODING_NAME: ${{ secrets.CODING_NAME }}
+      # env:
+      #   CODING_TOKEN: ${{ secrets.CODING_TOKEN }}
+      #   CODING_NAME: ${{ secrets.CODING_NAME }}
       run: |
         git clone https://e.coding.net/thpatch-cn/thcrapcn/mirror_thpatch_chs.git
 
@@ -52,14 +52,16 @@ jobs:
       env:
         CODING_TOKEN: ${{ secrets.CODING_TOKEN }}
         CODING_NAME: ${{ secrets.CODING_NAME }}
+        USER_NAME: ${{ secrets.USER_NAME }}
+        USER_EMAIL: ${{ secrets.USER_EMAIL }}
       run: |
-        cd clones/RetroCyber/thpatch_chs_mirror
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
+        cd mirror_thpatch_chs
+        git config user.name "${USER_NAME}"
+        git config user.email "${USER_EMAIL}"
         if [ -n "$(git status --porcelain)" ]; then
           git add .
           git commit -m "补丁更新：$(date -u '+%Y-%m-%d ===> %H:%M(UTC)')"
-          git push
+          git push -f https://${CODING_NAME}:${CODING_TOKEN}@e.coding.net/thpatch-cn/thcrapcn/mirror_thpatch_chs.git
         else
           echo "No changes detected."
         fi
