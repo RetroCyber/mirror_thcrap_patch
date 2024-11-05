@@ -1,62 +1,62 @@
 name: Mirror "lang_zh-hans" Repo to Coding
 
 on:
-	schedule:
-	# Runs every 4 hours from midnight
-		- cron: '0 */4 * * *'
-	# Allows manual triggering of the workflow
-	workflow_dispatch:
+  schedule:
+  # Runs every 4 hours from midnight
+    - cron: '0 */4 * * *'
+  # Allows manual triggering of the workflow
+  workflow_dispatch:
 
 jobs:
   update-patch:
-		runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-		steps:
-		# Step 1: Checkout the Coding repository (thpatch-cn/thcrapcn/mirror_thpatch_chs)
-		- name: Checkout Coding Repository
-		env:
-			CODING_TOKEN: ${{ secrets.CODING_TOKEN }}
-			CODING_NAME: ${{ secrets.CODING_NAME }}
-		run: |
-			git clone https://e.coding.net/thpatch-cn/thcrapcn/mirror_thpatch_chs.git
+    steps:
+    # Step 1: Checkout the Coding repository (thpatch-cn/thcrapcn/mirror_thpatch_chs)
+    - name: Checkout Coding Repository
+    env:
+      CODING_TOKEN: ${{ secrets.CODING_TOKEN }}
+      CODING_NAME: ${{ secrets.CODING_NAME }}
+    run: |
+      git clone https://e.coding.net/thpatch-cn/thcrapcn/mirror_thpatch_chs.git
 
       # Step 2: Load the script for mirror patching into the working directory
       - name: Get the mirror script
       run: |
-				cd mirror_thpatch_chs
-				git clone https://github.com/RetroCyber/thcrap_patch_mirror.git
+        cd mirror_thpatch_chs
+        git clone https://github.com/RetroCyber/thcrap_patch_mirror.git
 
       # Step 3: Install dependencies for the script in RetroCyber/thcrap_patch_mirror
       - name: Install Python dependencies
       run: |
-				cd mirror_thpatch_chs
-				python3 -m venv venv
-				source venv/bin/activate
-				pip install -r ./thcrap_patch_mirror/requirements.txt
+        cd mirror_thpatch_chs
+        python3 -m venv venv
+        source venv/bin/activate
+        pip install -r ./thcrap_patch_mirror/requirements.txt
 
       # Step 4: Run the mirror_repo.py script located in RetroCyber/thcrap_patch_mirror
       - name: Run mirror_repo.py
       run: |
-				cd mirror_thpatch_chs
-				source venv/bin/activate
-				python3 ./thcrap_patch_mirror/mirror_repo.py
-				rm -rf ./thcrap_patch_mirror/ ./venv/
+        cd mirror_thpatch_chs
+        source venv/bin/activate
+        python3 ./thcrap_patch_mirror/mirror_repo.py
+        rm -rf ./thcrap_patch_mirror/ ./venv/
 
       # Step 5: Check for changes and commit if there are any
       - name: Commit changes if any
       env:
-				CODING_TOKEN: ${{ secrets.CODING_TOKEN }}
-				CODING_NAME: ${{ secrets.CODING_NAME }}
-				USER_NAME: ${{ secrets.USER_NAME }}
-				USER_EMAIL: ${{ secrets.USER_EMAIL }}
+        CODING_TOKEN: ${{ secrets.CODING_TOKEN }}
+        CODING_NAME: ${{ secrets.CODING_NAME }}
+        USER_NAME: ${{ secrets.USER_NAME }}
+        USER_EMAIL: ${{ secrets.USER_EMAIL }}
       run: |
-				cd mirror_thpatch_chs
-				git config user.name "${USER_NAME}"
-				git config user.email "${USER_EMAIL}"
-				if [ -n "$(git status --porcelain)" ]; then
-					git add .
-					git commit -m "补丁更新：$(date -u '+%Y-%m-%d ===> %H:%M(UTC)')"
-					git push -f https://${CODING_NAME}:${CODING_TOKEN}@e.coding.net/thpatch-cn/thcrapcn/mirror_thpatch_chs.git
-				else
-					echo "No changes detected."
-				fi
+        cd mirror_thpatch_chs
+        git config user.name "${USER_NAME}"
+        git config user.email "${USER_EMAIL}"
+        if [ -n "$(git status --porcelain)" ]; then
+          git add .
+          git commit -m "补丁更新：$(date -u '+%Y-%m-%d ===> %H:%M(UTC)')"
+          git push -f https://${CODING_NAME}:${CODING_TOKEN}@e.coding.net/thpatch-cn/thcrapcn/mirror_thpatch_chs.git
+        else
+          echo "No changes detected."
+        fi
