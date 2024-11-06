@@ -1,4 +1,4 @@
-name: Mirror Repo and Update (Gitee)
+name: Mirror Repo and Update (Gitlab)
 
 concurrency: concurrency-key
 
