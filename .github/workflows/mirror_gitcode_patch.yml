@@ -54,7 +54,7 @@ jobs:
         if [ -n "$(git status --porcelain)" ]; then
           git add .
           git commit -m "补丁更新：$(date -u '+%Y-%m-%d ===> %H:%M(UTC)')"
-          git push -f https://${USER_NAME}@gitcode.com:${GITCODE_TOKEN}/RetroObsession/thpatch_mirror.git
+          git push -f https://${USER_NAME}:${GITCODE_TOKEN}@gitcode.com/RetroObsession/thpatch_mirror.git
         else
           echo "No changes detected."
         fi
