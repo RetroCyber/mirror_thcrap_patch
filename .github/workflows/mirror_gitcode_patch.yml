@@ -45,6 +45,7 @@ jobs:
     - name: Commit changes if any
       env:
         GITCODE_TOKEN: ${{ secrets.GITCODE_TOKEN }}
+        TOKEN_NAME: ${{ secrets.GITCODE_TOKEN_NAME }}
         USER_NAME: ${{ secrets.GITCODE_NAME }}
         USER_EMAIL: ${{ secrets.USER_EMAIL }}
       run: |
@@ -54,7 +55,7 @@ jobs:
         if [ -n "$(git status --porcelain)" ]; then
           git add .
           git commit -m "补丁更新：$(date -u '+%Y-%m-%d ===> %H:%M(UTC)')"
-          git push -f https://${USER_NAME}:${GITCODE_TOKEN}@gitcode.com/RetroObsession/thpatch_mirror.git
+          git push -f https://${TOKEN_NAME}:${GITCODE_TOKEN}@gitcode.com/RetroObsession/thpatch_mirror.git
         else
           echo "No changes detected."
         fi
